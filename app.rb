@@ -79,7 +79,11 @@ def read_from_json(file_name)
       next
     end
 
-    hash << JSON.parse(line)
+    begin
+      hash << JSON.parse(line)
+    rescue StandardError
+      puts 'Error: could not parse line: ' + line
+    end
   end
 
   hash
