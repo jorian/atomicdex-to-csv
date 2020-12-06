@@ -55,18 +55,18 @@ def main
       
     CSV.open('output.csv', 'ab') do |csv|
       csv << [
-      date,
-      uuid,
-      i_am_maker ? 'maker' : 'taker',
-      taker_coin,
-      maker_coin,
-      taker_amount,
-      maker_amount,
-      taker_address,
-      taker_spent_hash,
-      maker_address,
-      maker_spent_hash
-    ]
+        date,
+        uuid,
+        i_am_maker ? 'maker' : 'taker',
+        taker_coin,
+        maker_coin,
+        taker_amount,
+        maker_amount,
+        taker_address,
+        taker_spent_hash,
+        maker_address,
+        maker_spent_hash
+      ]
     end
   end
 end
