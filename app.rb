@@ -96,14 +96,10 @@ def read_from_json(file_name)
   file = File.read(file_name)
   hash = []
   file.each_line do |line|
-    if line == "\r\n"
-      next
-    end
-
     begin
       hash << JSON.parse(line)
     rescue StandardError
-      puts 'Error: could not parse line: ' + line
+      puts 'Error: could not parse line: ' + line unless line == "\n" || line == "\r\n"
     end
   end
 
