@@ -9,21 +9,26 @@ def main
     csv << ['date', 'uuid', 'was i maker?', 'taker coin', 'maker coin', 'taker amount', 'maker amount', 'taker address', 'txid', 'maker address', 'txid']
   end
 
+  my_addresses = []
+  File.read('addresses.txt').each_line do |line|
+    my_addresses << line.strip
+  end
+
   json.each do |swap|
     finished = swap['events'].any? { |item| item['event']['type'] == 'TakerPaymentSpent' } &&
                swap['events'].any? { |item| item['event']['type'] == 'MakerPaymentSpent' }
 
     next unless finished
 
-    date, i_am_maker, taker_coin, maker_coin, taker_amount, maker_amount, maker_address, maker_spent_hash, taker_address, taker_spent_hash = ''
+    date, taker_coin, maker_coin, taker_amount, maker_amount, maker_address, maker_spent_hash, taker_address, taker_spent_hash = ''
     uuid = swap['uuid']
+
+    i_am_maker = swap['events'].any? { |item| item['event']['type'] == 'MakerPaymentReceived' && (my_addresses.include? item['event']['data']['from'].first) }
 
     swap['events'].each do |event|
       date = DateTime.strptime(event['timestamp'].to_s, '%Q')
 
       if event['event']['type'] == 'Started'
-        i_am_maker = event['event']['data']['maker'] == 'ae3643a5a5bfeb9b133689b4d393f29d614451a8130d1402bc037240a3595cbe'
-
         maker_coin = event['event']['data']['maker_coin']
         taker_coin = event['event']['data']['taker_coin']
         maker_amount = event['event']['data']['maker_amount']
